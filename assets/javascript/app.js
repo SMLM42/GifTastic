@@ -21,6 +21,7 @@ $("#add-topic").on("click", function (event) {
     event.preventDefault()
     intTopics.push($("#topic-input").val().trim())
     makeButtons()
+    $("#topic-input").val("")
 })
 
 $(document.body).on("click", ".Topic", function () {
