@@ -19,8 +19,10 @@ function makeButtons() {
 makeButtons();
 $("#add-topic").on("click", function (event) {
     event.preventDefault()
-    intTopics.push($("#topic-input").val().trim())
-    makeButtons()
+    if ($("#topic-input").val() != "") {
+        intTopics.push($("#topic-input").val().trim())
+        makeButtons()
+    }
     $("#topic-input").val("")
 })
 
