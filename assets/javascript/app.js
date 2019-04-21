@@ -64,9 +64,7 @@ $(document.body).on("click", ".Topic", function () {
             gifImage.attr("data-animate", results[i].images.fixed_width.url)
             gifImage.attr("data-state", "animate")
             gifImage.attr("data-still", results[i].images.fixed_width_still.url)
-            // gifImage.attr("id", (search + i + "Gif"))
-            var Fuckyou = gifImage
-            Fuckyou.attr("id", (search + i + "Gif"))
+            gifImage.attr("id", (search + i + "Gif"));
             newGIF.prepend(gifImage); newGIF.prepend(p); newGIF.prepend(Title);
             favi.attr("value", (search + i))
             newGIF.append(favi);
@@ -91,6 +89,15 @@ $(document.body).on("click", ".Gif", function () {
     }
 })
 $(document.body).on("click", ".Favi", function () {
+    if ((localStorage.getItem("count")) === null || (localStorage.getItem("count") < 0)) {
+        var count = 0
+        localStorage.setItem("count", count)
+    }
+    else {
+        var count = localStorage.getItem("count");
+        count++;
+        localStorage.setItem("count", count);
+    }
     console.log($(this).val());
     var selection = ($(this).val());
     var newFavi = $("<span>")
@@ -99,7 +106,7 @@ $(document.body).on("click", ".Favi", function () {
     var rating = ($(favRating).html());
     var p = $("<p>").text(rating); p.addClass("card-text");
     var unFavi = $("<button>").text("Remove Favorite");
-    unFavi.addClass("unFavi")
+    unFavi.addClass("unFavi"); unFavi.val(count)
     var favTitle = ("#" + selection + "Title");
     var title = ($(favTitle).text())
     var Title = $("<h5>").text(title); Title.addClass("card-header");
@@ -116,30 +123,37 @@ $(document.body).on("click", ".Favi", function () {
     newFavi.prepend(gifImage); newFavi.prepend(p); newFavi.prepend(Title);
     newFavi.append(unFavi);
     // console.log(newFavi)
-    if ((localStorage.getItem("count")) === null) {
-        var count = 0
-        localStorage.setItem("count", count)
-    }
-    else {
-        var count = localStorage.getItem("count");
-        count++;
-        localStorage.setItem("count", count);
-    }
-    $("#results").prepend(newFavi)
+
+    // $("#results").prepend(newFavi)
     console.log(newFavi.html())
     newFavi = [JSON.stringify(newFavi.html())]
     console.log(newFavi)
     localStorage.setItem(count, newFavi)
 })
+$(document.body).on("click", ".unFavi", function () {
+    console.log($(this).val());
+    var count = localStorage.getItem("count")
+    var b = localStorage.getItem(count)
+    console.log(b)
+    var a = ($(this).val())
+    if (a != b) {
+        localStorage.setItem(a, b);
+        localStorage.removeItem(b);
+    }
+    else {
+        localStorage.removeItem(a);
+        count--;
+    }
+    count--;
+    localStorage.setItem("count", count)
 
-var saveState = ""
-$("#Favorites").on("click", function () {
-    results = false;
-    $("#Results").show(); $("#Favorites").hide()
-    saveState = $("#results").html()
+    showFavi();
+})
+
+function showFavi() {
     $("#results").empty()
     var count = (localStorage.getItem("count"));
-    count++
+    count++;
     for (var i = 0; i < count; i++) {
         var asdf = (JSON.parse(localStorage.getItem(i)))
         var qwerty = $("<span>")
@@ -148,6 +162,13 @@ $("#Favorites").on("click", function () {
         console.log(qwerty)
         $("#results").prepend(qwerty)
     }
+}
+var saveState = ""
+$("#Favorites").on("click", function () {
+    $("#Favorites").hide(); $("#Results").show()
+    results = false;
+    saveState = $("#results").html()
+    showFavi();
 })
 $("#Results").on("click", function () {
     results = true;
